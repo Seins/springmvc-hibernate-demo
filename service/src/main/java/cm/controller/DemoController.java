@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * ÀàÃû£ºcm.controller.DemoController
- * ´´½¨Õß£º CM .
- * ´´½¨Ê±¼ä£º2016/3/30
+ * ç±»åï¼šcm.controller.DemoController
+ * åˆ›å»ºè€…ï¼š CM .
+ * åˆ›å»ºæ—¶é—´ï¼š2016/3/30
  */
 @Controller
 @RequestMapping(value = "/service/json")
