@@ -17,11 +17,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/service/json")
 public class DemoController extends BaseController {
 
+    /**
+     * 演示方法,JSON数据统一输出格式
+     * @param modelMap
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaTypes.JSON_UTF_8)
     public String msgDemo(ModelMap modelMap) {
         modelMap.clear();
         modelMap.put("msg", "request success!framework running success");
+        modelMap.put("data","data content...");
         this.success(modelMap);
         return JSON.toJSONString(modelMap);
     }

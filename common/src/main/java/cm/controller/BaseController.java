@@ -40,7 +40,7 @@ public class BaseController {
      * @param modelMap
      * @param e
      */
-    public void failed(ModelMap modelMap, Exception e) {
+    public void failed(ModelMap modelMap, RuntimeException e) {
         modelMap.put("result", "-3");
         modelMap.put("msg", e.getMessage());
     }

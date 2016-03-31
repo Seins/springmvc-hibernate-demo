@@ -10,13 +10,15 @@
 http://www.springframework.org/schema/mvc
 http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
        default-lazy-init="true">
+
+    <!--bean扫描,将控制器之外的所有springbean纳入管理-->
     <mvc:annotation-driven/>
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <context:component-scan base-package="cm">
         <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
     </context:component-scan>
 
-
+    <!--配置文件纳入-->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -26,6 +28,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
         <property name="fileEncoding" value="UTF-8"></property>
     </bean>
 
+    <!--hibernate会话工厂-->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan">
@@ -63,6 +66,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
         </property>
     </bean>
 
+    <!--数据源配置-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass">
             <value>${jdbc.driverClassName}</value>
@@ -102,6 +106,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
     </bean>
     <!--<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>-->
 
+    <!--AOP配置,service包下方法采用advice的方法来管理事物-->
     <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
     <aop:config expose-proxy="true">
         <aop:pointcut id="txPointcut" expression="execution(* cm.service.*.*(..))"/>
@@ -118,7 +123,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
         </tx:attributes>
     </tx:advice>
 
-
+    <!--hibernate配置-->
     <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
