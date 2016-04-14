@@ -2,7 +2,7 @@
 demo for springmvc +  hibernate project ,an empty project to teach
 
 project tree
-root --
+root --<br>
      |--service / web service module
        |--src /
        |--java /  java class files path
