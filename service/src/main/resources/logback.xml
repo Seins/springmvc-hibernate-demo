@@ -41,7 +41,7 @@
 
 
     <!-- project default level -->
-    <logger name="fm" level="DEBUG"/>
+    <logger name="cm" level="DEBUG"/>
 
     <!--log4jdbc -->
     <logger name="jdbc.sqltiming" level="INFO"/>
