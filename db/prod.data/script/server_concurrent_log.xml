@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd"
-        >
+>
 
     <preConditions>
         <dbms type="mysql"/>
@@ -29,5 +29,13 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="server_info"/>
+    </changeSet>
+
+    <changeSet author="CM" id="addAutoIncrement-example">
+        <addAutoIncrement
+                          columnDataType="bigint"
+                          columnName="id"
+                          schemaName="${schema}"
+                          tableName="${table.name}"/>
     </changeSet>
 </databaseChangeLog>

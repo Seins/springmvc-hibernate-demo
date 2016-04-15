@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
- * ÀàÃû£ºcm.controller.NonBussinessController
- * ´´½¨Õß£º CM .
- * ´´½¨Ê±¼ä£º2016/4/15
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cm.controller.NonBussinessController
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ CM .
+ * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£º2016/4/15
  */
 @Controller
 @RequestMapping("/analysis/non-bussiness")
@@ -34,8 +35,21 @@ public class NonBusinessController extends BaseController {
     public String concurrentList(ModelMap modelMap) {
         try {
             List<ServerInfo> servers = concurrentLogService.findAllServer();
-            List<ServerConcurrentLog> logs = concurrentLogService.findConcurrentByCondition(servers.get(0), null);
-            modelMap.put("data", logs);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            timestamp.setMinutes(0);
+            timestamp.setNanos(0);
+            timestamp.setSeconds(0);
+            List<ServerConcurrentLog> logs = concurrentLogService.findConcurrentByCondition(servers.get(0), timestamp);
+            List logData = new ArrayList();
+            for(ServerConcurrentLog log : logs){
+                Map logMap  = new HashMap();
+                logMap.put("logTime",log.getLogTime());
+                logMap.put("amount",log.getConcurrentAmount());
+                logMap.put("serverName",log.getServerInfo().getServerName());
+                logData.add(logMap);
+
+            }
+            modelMap.put("data", logData);
             this.success(modelMap);
         } catch (Exception ex) {
             this.failed(modelMap);

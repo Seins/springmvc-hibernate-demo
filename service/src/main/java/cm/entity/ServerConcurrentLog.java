@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * ÀàÃû£ºcm.entity.ServerConcurrentLog
- * ´´½¨Õß£º CM .
- * ´´½¨Ê±¼ä£º2016/4/15
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cm.entity.ServerConcurrentLog
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ CM .
+ * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£º2016/4/15
  */
 @Entity
 @Table(name = "server_concurrent_log", schema = "", catalog = "log_db")
@@ -15,21 +15,11 @@ public class ServerConcurrentLog {
     private Timestamp logTime;
     private ServerInfo serverInfo;
     private Long concurrentAmount;
-    private Long serverId;
 
-    @Basic
-    @Column(name = "server_id", nullable = true, insertable = true, updatable = true)
-    public Long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(Long serverId) {
-        this.serverId = serverId;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "id", nullable = true, insertable = true, updatable = true)
     public long getId() {
         return id;
     }
@@ -48,6 +38,7 @@ public class ServerConcurrentLog {
         this.logTime = logTime;
     }
 
+    @JoinColumn(name = "server_id",nullable = false)
     @ManyToOne(targetEntity = ServerInfo.class, fetch = FetchType.EAGER)
     public ServerInfo getServerInfo() {
         return serverInfo;

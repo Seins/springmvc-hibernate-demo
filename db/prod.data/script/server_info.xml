@@ -23,4 +23,11 @@
             <column name="server_name" type="varchar(100)" remarks="服务器名称"/>
         </createTable>
     </changeSet>
+    <changeSet author="CM" id="addAutoIncrement">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                schemaName="${schema}"
+                tableName="${table.name}"/>
+    </changeSet>
 </databaseChangeLog>
