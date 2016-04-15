@@ -45,8 +45,8 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="connection.characterEncoding">UTF-8</prop>
                 <prop key="connection.useUnicode">true</prop>
-                <prop key="hibernate.connection.url">${jdbc.url}</prop>
-                <prop key="hibernate.connection.driver_class">${jdbc.driverClassName}</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/log_db</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
                 <prop key="hibernate.connection.autocommit">true</prop>
                 <prop key="hibernate.c3p0.min_size">5</prop>
                 <!--最大连接数 -->

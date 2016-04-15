@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd"
+        >
+
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+    <changeSet id="server.data" author="CM">
+        <sql>
+            <![CDATA[
+                use log_db;
+                insert into server_info(id,real_ip,real_port,server_name)values(1,'58.60.0.0','443','portal node1');
+                insert into server_info(id,real_ip,real_port,server_name)values(2,'219.128.0.0','80','common node1');
+                insert into server_info(id,real_ip,real_port,server_name)values(3,'219.137.255.255','9099','business node1');
+                insert into server_info(id,real_ip,real_port,server_name)values(4,'218.13.0.0','5222','msg node2');
+                insert into server_info(id,real_ip,real_port,server_name)values(5,'110.6.0.0','5222','msg node1');
+            ]]>
+        </sql>
+    </changeSet>
+    <changeSet id="concurrent.data" author="CM">
+        <sql>
+            <![CDATA[
+                use log_db;
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('1', '2016-04-15 00:00:45', '1', '36');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('2', '2016-04-15 01:00:45', '1', '111');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('3', '2016-04-15 02:00:45', '1', '80');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('4', '2016-04-15 03:00:45', '1', '20');
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('5', '2016-04-15 04:00:45', '1', '15');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('6', '2016-04-15 05:00:45', '1', '11');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('7', '2016-04-15 06:00:45', '1', '5');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('8', '2016-04-15 07:00:45', '1', '80');
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('9', '2016-04-15 08:00:45', '1', '200');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('10', '2016-04-15 09:00:45', '1', '237');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('11', '2016-04-15 10:00:45', '1', '339');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('12', '2016-04-15 11:00:45', '1', '200');
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('13', '2016-04-15 12:00:45', '1', '70');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('14', '2016-04-15 13:00:45', '1', '209');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('15', '2016-04-15 14:00:45', '1', '200');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('16', '2016-04-15 15:00:45', '1', '240');
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('17', '2016-04-15 16:00:45', '1', '250');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('18', '2016-04-15 17:00:45', '1', '280');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('19', '2016-04-15 18:00:45', '1', '290');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('20', '2016-04-15 19:00:45', '1', '150');
+
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('21', '2016-04-15 20:00:45', '1', '80');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('22', '2016-04-15 21:00:45', '1', '105');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('23', '2016-04-15 22:00:45', '1', '70');
+                INSERT INTO server_concurrent_log(id, log_time, server_id, concurrent_amount) VALUES ('24', '2016-04-15 23:00:45', '1', '70');
+
+            ]]>
+        </sql>
+    </changeSet>
+</databaseChangeLog>

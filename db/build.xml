@@ -1,0 +1,124 @@
+<project name="db_log_analysis" basedir="." default="1.about">
+    <path id="basedir.path">
+        <pathelement path="${basedir}"/>
+    </path>
+    <pathconvert targetos="unix" property="basedir.unix" refid="basedir.path"/>
+    <echo message="${basedir.unix}"/>
+
+    <property file="${basedir}/build.properties"/>
+    <property name="report.dir" value="${basedir.unix}/report"/>
+    <property name="target.dir" value="target"/>
+    <property name="test.data.dir" value="${basedir.unix}/test.data"/>
+    <property name="prod.data.dir" value="${basedir.unix}/prod.data"/>
+    <property name="lib.dir" value="${basedir.unix}/lib"/>
+    <property name="schema" value="log_db"/>
+
+    <condition property="is.test">
+        <and>
+            <isset property="is.prod.env"></isset>
+
+            <equals arg1="${is.prod.env}" arg2="false"></equals>
+        </and>
+    </condition>
+
+
+    <tstamp>
+        <format property="date.stamp" pattern="yyyy/MM/dd hh:mm:ss"/>
+    </tstamp>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" casesensitive="false">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+
+    <taskdef resource="migratortasks.properties">
+        <classpath refid="classpath"/>
+    </taskdef>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath refid="classpath"/>
+    </taskdef>
+
+    <target name="1.about" description="Show the project help info.">
+        <echo message="${date.stamp}"/>
+        <echo message="This is ${app.name} data base migration."/>
+        <echo message="For mysql: 1.creat db"/>
+        <echo message="Database infos: "/>
+        <echo message="jdbc.driver=${jdbc.driver}"/>
+        <echo message="jdbc.url=${jdbc.url}"/>
+        <echo message="super.name=${super.name}"/>
+        <echo message="super.password=${super.password}"/>
+        <echo message="username=${username}"/>
+        <echo message="password=${password}"/>
+        <echo message="schema=${schema}"/>
+    </target>
+
+    <target name="2.clean" depends="1.about" description="Clean build information.">
+        <delete dir="${target.dir}" includeemptydirs="true"/>
+    </target>
+
+    <target name="copy.script">
+        <mkdir dir="${target.dir}"/>
+        <mkdir dir="${target.dir}/test.data"/>
+        <mkdir dir="${target.dir}/prod.data"/>
+        <filter token="schema" value="${database}"/>
+        <filter token="target.dir" value="${target.dir}"/>
+        <copy todir="${target.dir}/prod.data" filtering="true" encoding="UTF8" outputencoding="UTF8" overwrite="true">
+            <fileset dir="${prod.data.dir}" includes="**/*"/>
+        </copy>
+        <copy todir="${target.dir}/test.data" filtering="true" encoding="UTF8" outputencoding="UTF8" overwrite="true">
+            <fileset dir="${test.data.dir}" includes="**/*"/>
+        </copy>
+    </target>
+
+    <target name="3.prepare" depends="2.clean,copy.script" description="Clean and copy scripts."/>
+
+    <target name="4.init.db" depends="3.prepare" description="Init db.">
+        <fail unless="is.test"
+              message="错误! ${line.separator}警告: 正式生产环境不允许执行此操作!!!!"/>
+        <sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${super.name}" password="${super.password}"
+             classpathref="classpath" encoding="UTF-8">
+            <fileset dir="${target.dir}/prod.data/init.db" casesensitive="false">
+                <include name="clean_liquibase_log_tables.sql"/>
+                <include name="create_schema.sql"/>
+            </fileset>
+        </sql>
+    </target>
+
+    <macrodef name="migrateDb">
+        <attribute name="script.dir"/>
+        <!-- dropFirst do not work with schema -->
+        <attribute name="dropFirst" default="false"/>
+        <sequential>
+            <echo message="执行脚本: @{script.dir}"/>
+            <!-- add  outputfile="${report.dir}/liquibase${date.stamp}.sql here can output the sql script file instead of modify db directory -->
+            <migrateDatabase defaultSchemaName="${database}" changeLogFile="@{script.dir}/script_suite.xml"
+                             driver="${jdbc.driver}" url="${jdbc.url}" username="${username}" password="${password}"
+                             dropFirst="@{dropFirst}" promptOnNonLocalDatabase="${prompt.user.if.not.local.database}"
+                             classpathref="classpath"/>
+        </sequential>
+    </macrodef>
+
+    <target name="5.rebuild.schema" depends="4.init.db" description="Rebuild schema">
+        <echo message="初始化数据库表结构及基础数据..."/>
+        <migrateDb script.dir="${target.dir}/prod.data/script" dropfirst="false"/>
+    </target>
+
+    <target name="insertTestData" depends="3.prepare" description="insert test date">
+        <echo message="插入测试数据..."/>
+        <migrateDb script.dir="${target.dir}/test.data/script"/>
+    </target>
+
+    <target name="6.refresh.test.data" depends="5.rebuild.schema" description="Rebuild schema and refresh test data.">
+        <echo message="插入测试数据..."/>
+        <migrateDb script.dir="${target.dir}/test.data/script" dropfirst="false"/>
+    </target>
+
+    <target name="7.upgrade.db" depends="3.prepare" description="Update database.">
+        <echo message="更新数据库..."/>
+        <migrateDb script.dir="${target.dir}/prod.data/script" dropfirst="false"/>
+    </target>
+
+</project>

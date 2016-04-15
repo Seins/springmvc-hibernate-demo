@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd"
+        >
+
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+    <property name="table.name" value="server_concurrent_log"/>
+    <property name="schema" value="log_db"/>
+    <changeSet id="create.table" author="CM">
+        <sql>
+            use ${schema};
+        </sql>
+        <createTable tableName="${table.name}" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="log_time" type="timestamp" remarks="日志记录时间"></column>
+            <column name="server_id" type="bigint" remarks="服务器ID"></column>
+            <column name="concurrent_amount" remarks="并发数量" type="bigint"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="server_id"
+                                 baseTableName="${table.name}"
+                                 constraintName="fk_scl_sid"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="server_info"/>
+    </changeSet>
+</databaseChangeLog>
