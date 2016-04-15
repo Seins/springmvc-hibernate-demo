@@ -15,8 +15,20 @@ public class ServerConcurrentLog {
     private Timestamp logTime;
     private ServerInfo serverInfo;
     private Long concurrentAmount;
+    private Long serverId;
+
+    @Basic
+    @Column(name = "server_id", nullable = true, insertable = true, updatable = true)
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public long getId() {
         return id;
@@ -36,7 +48,7 @@ public class ServerConcurrentLog {
         this.logTime = logTime;
     }
 
-    @ManyToOne(targetEntity = ServerInfo.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = ServerInfo.class, fetch = FetchType.EAGER)
     public ServerInfo getServerInfo() {
         return serverInfo;
     }

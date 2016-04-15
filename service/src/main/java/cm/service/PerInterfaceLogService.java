@@ -1,7 +1,5 @@
 package cm.service;
 
-import cm.dao.HibernateBaseDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +10,10 @@ import java.util.List;
  * 创建时间：2016/4/15
  */
 @Service
-public class BussinessLogService {
-    @Autowired
-    private HibernateBaseDao baseDao;
-
+public class PerInterfaceLogService extends BaseService {
 
     public List<Object> findAll() {
         return null;
     }
+
 }
