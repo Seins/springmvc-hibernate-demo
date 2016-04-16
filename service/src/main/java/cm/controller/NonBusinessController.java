@@ -19,11 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.sql.Timestamp;
 import java.util.*;
 
-/**
- * ������cm.controller.NonBussinessController
- * �����ߣ� CM .
- * ����ʱ�䣺2016/4/15
- */
+
 @Controller
 @RequestMapping("/analysis/non-bussiness")
 public class NonBusinessController extends BaseController {
@@ -122,12 +118,19 @@ public class NonBusinessController extends BaseController {
     }
 
 
+    /**
+     * 获取某天的所有服务器节点所有接口的超时请求统计
+     *
+     * @param modelMap
+     * @param logTime  日志纪录时间 精确到天
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/timeout/list")
     public String timeoutList(ModelMap modelMap, @RequestParam(value = "logTime") Long logTime) {
         try {
             Map<String, List> serversDateCount = timeOutLogService.findAllServerTimeoutLogByDate(new Timestamp(logTime));
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             List xAxis = new ArrayList();
             for (int i = 0; i < 24; i++) {
                 String h = i + "";
@@ -136,9 +139,9 @@ public class NonBusinessController extends BaseController {
                 }
                 xAxis.add(h + ":00");
             }
-            data.put("xAxis",xAxis);
+            data.put("xAxis", xAxis);
             data.put("series", serversDateCount);
-            modelMap.put("data",data);
+            modelMap.put("data", data);
             this.success(modelMap);
         } catch (RuntimeException ex) {
             this.failed(modelMap, ex.getMessage());

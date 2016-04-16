@@ -12,6 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/{module}")
 public class EnterController {
+
+    /**
+     * 页面数据注入,不同的模块,主体内容的页面URI不同
+     *
+     * @param modelMap
+     * @param module
+     * @return
+     */
     @RequestMapping()
     public String index(ModelMap modelMap, @PathVariable(value = "module") ModuleEnmu module) {
         switch (module) {
