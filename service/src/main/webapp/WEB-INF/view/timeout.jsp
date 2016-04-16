@@ -14,7 +14,7 @@
     $("#queryBtn").bind("click", function () {
 
         var date = new Date($("#date").val()).getTime();
-        if(isNaN(date)){
+        if (isNaN(date)) {
             alert('请选择要查询的时间');
         }
         changeTable(date);
@@ -30,30 +30,44 @@
 //        }
 //        _c--;
         $.ajax({
-            url: '${pageContext.request.contextPath}/analysis/non-bussiness/concurrent/list',
+            url: '${pageContext.request.contextPath}/analysis/non-bussiness/timeout/list',
             data: {
-                "time": date ? date : getData(0).getTime()
+                "logTime": date ? date : getData(0).getTime()
             },
             type: 'post',
             dataType: 'json',
-            async: false,
+            async: true,
             success: function (res) {
                 if (res.result !== "0") {
                     alert(res.msg);
                     return;
                 }
                 console.log("res:%o", res);
-                if(res.data.series.length<=0){
+                if (res.data.series.length <= 0) {
                     alert('没有找到对应的日志数据!');
                 }
                 var myChart = echarts.init(document.getElementById('main'));
+                var series = [];
+                var legend = [];
+                for (var _c in res.data.series) {
+                    legend.push(_c);
+                    series.push({
+                        name: _c,
+                        type: 'bar',
+                        data: res.data.series[_c]
 
+                    });
+                }
                 option = {
                     title: {
-                        text: '服务器并发统计折线图'
+                        text: '服务器超时数量统计',
+                        subtext: '超时数量'
                     },
                     tooltip: {
                         trigger: 'axis'
+                    },
+                    legend: {
+                        data: legend
                     },
                     toolbox: {
                         show: true,
@@ -65,21 +79,21 @@
                             saveAsImage: {show: true}
                         }
                     },
-                    legend: {
-                        data: res.data.legend
-                    },
-                    xAxis: {
-                        type: 'category',
-                        boundaryGap: false,
-                        data: res.data.xAxis
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: res.data.series
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: res.data.xAxis
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: series
                 };
                 myChart.setOption(option);
-
             },
             error: function (rq, st, msg) {
                 alert("error:" + msg);

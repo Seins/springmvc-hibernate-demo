@@ -38,7 +38,7 @@ public class ServerConcurrentLog {
         this.logTime = logTime;
     }
 
-    @JoinColumn(name = "server_id",nullable = false)
+    @JoinColumn(name = "server_id", nullable = false)
     @ManyToOne(targetEntity = ServerInfo.class, fetch = FetchType.EAGER)
     public ServerInfo getServerInfo() {
         return serverInfo;

@@ -1,6 +1,7 @@
 package cm.service;
 
 import cm.dao.HibernateBaseDao;
+import cm.entity.InterfaceInfo;
 import cm.entity.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * ÀàÃû£ºcm.service.BaseService
- * ´´½¨Õß£º CM .
- * ´´½¨Ê±¼ä£º2016/4/15
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cm.service.BaseService
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ CM .
+ * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£º2016/4/15
  */
 @Component
 public class BaseService {
@@ -21,4 +22,39 @@ public class BaseService {
     public List<ServerInfo> findAllServer() {
         return (List<ServerInfo>) baseDao.getAll(ServerInfo.class);
     }
+
+
+    /**
+     * æ·»åŠ æ¥å£
+     *
+     * @param interfaceInfo
+     * @return
+     */
+    public Long addInterface(InterfaceInfo interfaceInfo) {
+        baseDao.add(interfaceInfo);
+        return interfaceInfo.getId();
+    }
+
+
+    /**
+     * è·å–æ‰€æœ‰çš„æ¥å£
+     *
+     * @return
+     */
+    public List<InterfaceInfo> findAllInterface() {
+        return (List<InterfaceInfo>) baseDao.getAll(InterfaceInfo.class);
+    }
+
+    /**
+     * è·å–æœåŠ¡å™¨èŠ‚ç‚¹çš„æ¥å£
+     *
+     * @param serverInfo
+     * @return
+     */
+    public List<InterfaceInfo> findInterfaceByServerInfo(ServerInfo serverInfo) {
+        String hql = "from InterfaceInfo ii where ii.serverInfo=?";
+        return (List<InterfaceInfo>) baseDao.queryForList(hql, serverInfo);
+    }
+
+
 }

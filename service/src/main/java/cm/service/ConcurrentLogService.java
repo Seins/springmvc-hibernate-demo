@@ -16,7 +16,6 @@ import java.util.List;
 public class ConcurrentLogService extends BaseService {
 
     /**
-     *
      * @param serverInfo
      * @param logTime
      * @return
@@ -26,20 +25,25 @@ public class ConcurrentLogService extends BaseService {
         Timestamp startTime = new Timestamp(logTime.getTime());
         logTime.setHours(23);
         Timestamp endTime = new Timestamp(logTime.getTime());
-        String hql =  "from ServerConcurrentLog  scl where scl.serverInfo=? and scl.logTime>=? and scl.logTime<=?";
-        return (List<ServerConcurrentLog>) baseDao.queryForList(hql, serverInfo,startTime,endTime);
+        String hql = "from ServerConcurrentLog  scl where scl.serverInfo=? and scl.logTime>=? and scl.logTime<=?";
+        return (List<ServerConcurrentLog>) baseDao.queryForList(hql, serverInfo, startTime, endTime);
     }
 
-
-    public ServerConcurrentLog findById(Long id){
-        return (ServerConcurrentLog) baseDao.getById(ServerConcurrentLog.class,id);
-    }
     /**
+     * 根据ID获取并发日志
      *
+     * @param id
+     * @return
+     */
+    public ServerConcurrentLog findById(Long id) {
+        return (ServerConcurrentLog) baseDao.getById(ServerConcurrentLog.class, id);
+    }
+
+    /**
      * @param log
      * @return
      */
-    public Long addConcurrentLog(ServerConcurrentLog log){
+    public Long addConcurrentLog(ServerConcurrentLog log) {
         baseDao.add(log);
         return log.getId();
     }

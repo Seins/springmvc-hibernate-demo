@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd"
+        >
+
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+    <property name="table.name" value="server_timeout_log"/>
+    <property name="schema" value="log_db"/>
+    <changeSet id="create.table" author="CM">
+        <sql>
+            use ${schema};
+        </sql>
+        <createTable tableName="${table.name}" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="server_id" type="bigint"/>
+            <column name="interface_id" type="bigint" remarks="接口ID,服务器接口"></column>
+            <column name="log_time" type="timestamp" remarks="日志纪录时间"></column>
+            <column name="error_stack" type="longtext" remarks="错误堆栈信息,测试数据为空"></column>
+            <column name="error_params" type="varchar(1000)" remarks="请求参数,测试数据为空"></column>
+        </createTable>
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                schemaName="${schema}"
+                tableName="${table.name}"/>
+        <addForeignKeyConstraint baseColumnNames="server_id"
+                                 baseTableName="${table.name}"
+                                 constraintName="fk_stl_sid"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="server_info"/>
+        <addForeignKeyConstraint baseColumnNames="interface_id"
+                                 baseTableName="${table.name}"
+                                 constraintName="fk_stl_Iid"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="interface_info"/>
+    </changeSet>
+</databaseChangeLog>
