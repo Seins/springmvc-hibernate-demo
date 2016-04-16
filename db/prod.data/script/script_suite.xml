@@ -10,5 +10,7 @@
     <include file="@target.dir@/prod.data/script/server_concurrent_log.xml"/>
     <include file="@target.dir@/prod.data/script/interface_info.xml"/>
     <include file="@target.dir@/prod.data/script/server_timeout_log.xml"/>
+    <include file="@target.dir@/prod.data/script/interface_request_log.xml"/>
+
 
 </databaseChangeLog>

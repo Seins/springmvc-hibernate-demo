@@ -30,7 +30,7 @@ public class EnterController {
                 modelMap.put("uri", "/WEB-INF/view/timeout.jsp");
                 break;
             case ALL_INTERFACE_FREQUENCE:
-                modelMap.put("uri", "/WEB-INF/view/concurrent.jsp");
+                modelMap.put("uri", "/WEB-INF/view/interface.jsp");
                 break;
             case INTERFACE_FREQUENCE:
                 modelMap.put("uri", "/WEB-INF/view/concurrent.jsp");

@@ -8,7 +8,7 @@
     <preConditions>
         <dbms type="mysql"/>
     </preConditions>
-    <property name="table.name" value="interface_info"/>
+    <property name="table.name" value="interface_request_log"/>
     <property name="schema" value="log_db"/>
     <changeSet id="create.table" author="CM">
         <sql>
@@ -18,21 +18,22 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="server_id" type="bigint"/>
-            <column name="interface_name" type="varchar(200)"/>
-            <column name="interface_uri" type="varchar(500)"/>
+            <column name="interface_id" type="bigint"/>
+            <column name="log_time" type="timestamp"/>
+            <column name="request_amount" type="bigint"/>
         </createTable>
         <addAutoIncrement
                 columnDataType="bigint"
                 columnName="id"
                 schemaName="${schema}"
                 tableName="${table.name}"/>
-        <addForeignKeyConstraint baseColumnNames="server_id"
+        <addForeignKeyConstraint baseColumnNames="interface_id"
                                  baseTableName="${table.name}"
-                                 constraintName="fk_ii_sid"
+                                 constraintName="fk_iql_sid"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="server_info"/>
+                                 referencedTableName="interface_info"/>
     </changeSet>
+
 </databaseChangeLog>
