@@ -13,6 +13,17 @@ public class InterfaceRequestLog {
     private Timestamp logTime;
     private Long requestAmount;
     private InterfaceInfo interfaceInfo;
+    private Long averageResponseTime;
+
+    @Basic
+    @Column(name = "average_response_time", nullable = true)
+    public Long getAverageResponseTime() {
+        return averageResponseTime;
+    }
+
+    public void setAverageResponseTime(Long averageResponseTime) {
+        this.averageResponseTime = averageResponseTime;
+    }
 
     @ManyToOne(targetEntity = InterfaceInfo.class, fetch = FetchType.EAGER)
     public InterfaceInfo getInterfaceInfo() {

@@ -35,5 +35,10 @@
                                  referencedColumnNames="id"
                                  referencedTableName="interface_info"/>
     </changeSet>
+    <changeSet id="add.response_time.column" author="CM">
+        <addColumn tableName="${table.name}">
+            <column name="average_response_time" type="bigint"></column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

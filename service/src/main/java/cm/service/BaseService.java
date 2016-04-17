@@ -2,6 +2,7 @@ package cm.service;
 
 import cm.dao.HibernateBaseDao;
 import cm.entity.InterfaceInfo;
+import cm.entity.InterfaceRequestLog;
 import cm.entity.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,15 @@ public class BaseService {
      */
     public List<InterfaceInfo> findAllInterface() {
         return (List<InterfaceInfo>) baseDao.getAll(InterfaceInfo.class);
+    }
+
+
+    public List<InterfaceRequestLog> findAllLogs() {
+        return (List<InterfaceRequestLog>) baseDao.getAll(InterfaceRequestLog.class);
+    }
+
+    public void updateLog(InterfaceRequestLog log) {
+        baseDao.update(log);
     }
 
     /**

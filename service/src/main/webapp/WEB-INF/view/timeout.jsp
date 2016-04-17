@@ -21,14 +21,9 @@
     })
     // 指定图表的配置项和数据
     var option;
-    //    var _c = 15;
+    loading();
     changeTable();
-    //    var _i = setInterval("changeTable()", 15000);
     function changeTable(date) {
-//        if (_c <= 1) {
-//            clearInterval(_i);
-//        }
-//        _c--;
         $.ajax({
             url: '${pageContext.request.contextPath}/analysis/non-bussiness/timeout/list',
             data: {
@@ -37,7 +32,7 @@
             type: 'post',
             dataType: 'json',
             async: true,
-            beforeSend:function(){
+            beforeSend: function () {
                 loading();
             },
             success: function (res) {
@@ -88,6 +83,7 @@
                     xAxis: [
                         {
                             type: 'category',
+                            boundaryGap: true,
                             data: res.data.xAxis
                         }
                     ],
@@ -96,7 +92,12 @@
                             type: 'value'
                         }
                     ],
-                    series: series
+                    series: series,
+                    dataZoom: {
+                        show: true,
+                        start : 0,
+                        end : 23
+                    }
                 };
                 myChart.setOption(option);
             },
@@ -111,6 +112,7 @@
     function getData(AddDayCount) {
         var dd = new Date();
         dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+        $("#date").val(dd.getFullYear() + "-" + (dd.getMonth() + 1) + "-" + dd.getDate());
         return dd;
     }
 </script>

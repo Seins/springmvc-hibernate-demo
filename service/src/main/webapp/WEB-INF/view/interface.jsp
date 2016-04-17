@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <div id="main" class="main-right">
 
 </div>
@@ -21,18 +22,14 @@
     })
     // 指定图表的配置项和数据
     var option;
-    //    var _c = 15;
     changeTable();
-    //    var _i = setInterval("changeTable()", 15000);
     function changeTable(date) {
-//        if (_c <= 1) {
-//            clearInterval(_i);
-//        }
-//        _c--;
+        var serverId = $("#server").val();
         $.ajax({
-            url: '${pageContext.request.contextPath}/analysis/non-bussiness/concurrent/list',
+            url: '${pageContext.request.contextPath}/analysis/business/interface/list',
             data: {
-                "time": date ? date : getData(0).getTime()
+                "logTime": date ? date : getData(0).getTime(),
+                "serverId": serverId ? serverId : 0
             },
             type: 'post',
             dataType: 'json',
@@ -52,26 +49,47 @@
                     return;
                 }
                 var myChart = echarts.init(document.getElementById('main'));
-
+                var series = [];
+                var legend = [];
+                for (var _c in res.data.series) {
+                    legend.push(_c);
+                    series.push({
+                        name: _c,
+                        type: 'bar',
+                        data: res.data.series[_c],
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '平均值'}
+                            ]
+                        }
+                    });
+                }
                 option = {
                     title: {
-                        text: '服务器并发统计折线图'
+                        text: '服务器接口请求频率',
+                        subtext: '频率'
                     },
                     tooltip: {
                         trigger: 'axis'
                     },
+                    legend: {
+                        data: legend
+                    },
                     toolbox: {
                         show: true,
                         feature: {
-                            mark: {show: true},
-                            dataView: {show: true, readOnly: false},
-                            magicType: {show: true, type: ['line', 'bar']},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
+                            dataZoom: {},
+                            dataView: {readOnly: false},
+                            magicType: {type: ['line', 'bar']},
+                            restore: {},
+                            saveAsImage: {}
                         }
-                    },
-                    legend: {
-                        data: res.data.legend
                     },
                     xAxis: {
                         type: 'category',
@@ -79,15 +97,18 @@
                         data: res.data.xAxis
                     },
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} 次'
+                        }
                     },
-                    series: res.data.series
+                    series: series
                 };
                 myChart.setOption(option);
-
             },
             error: function (rq, st, msg) {
                 hideLoading();
+                console.error("req:%o,st:%o,msg:%o", rq, st, msg);
                 alert("error:" + msg);
             }
         })

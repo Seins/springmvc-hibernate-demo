@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +32,14 @@ public class BusinessController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/interface/list", method = RequestMethod.POST, produces = MediaTypes.JSON_UTF_8)
-    public String timeoutList(ModelMap modelMap, @RequestParam(value = "logTime") Long logTime) {
+    public String timeoutList(ModelMap modelMap, @RequestParam(value = "logTime") Long logTime,
+                              @RequestParam(value = "serverId")int serverId) {
         try {
             List<ServerInfo> servers = mulInterfaceService.findAllServer();
-            Map<String, List> data = mulInterfaceService.findServerInterfaceLogByDate(servers.get(0), new Timestamp(logTime));
+            Map data = new HashMap();
+            Map<String, List> series = mulInterfaceService.findServerInterfaceLogByDate(servers.get(serverId), new Timestamp(logTime));
+            data.put("series", series);
+            data.put("xAxis", getXAxis());
             modelMap.put("data", data);
             this.success(modelMap);
         } catch (RuntimeException ex) {
@@ -48,4 +54,26 @@ public class BusinessController extends BaseController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "/response/list", method = RequestMethod.POST, produces = MediaTypes.JSON_UTF_8)
+    public String responseTimeList(ModelMap modelMap, @RequestParam(value = "logTime") Long logTime,
+                              @RequestParam(value = "serverId")int serverId) {
+        try {
+            List<ServerInfo> servers = mulInterfaceService.findAllServer();
+            Map data = new HashMap();
+            Map<String, List> series = mulInterfaceService.findServerResponseLogByDate(servers.get(serverId), new Timestamp(logTime));
+            data.put("series", series);
+            data.put("xAxis", getXAxis());
+            modelMap.put("data", data);
+            this.success(modelMap);
+        } catch (RuntimeException ex) {
+            this.failed(modelMap, ex.getMessage());
+            LOGGER.error("server time out list occur error:", ex);
+        } catch (Exception ex) {
+            this.failed(modelMap);
+            LOGGER.error("server time out list occur error:", ex);
+        }
+
+        return JSON.toJSONString(modelMap);
+    }
 }

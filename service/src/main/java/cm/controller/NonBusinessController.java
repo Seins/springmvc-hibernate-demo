@@ -131,15 +131,7 @@ public class NonBusinessController extends BaseController {
         try {
             Map<String, List> serversDateCount = timeOutLogService.findAllServerTimeoutLogByDate(new Timestamp(logTime));
             Map<String, Object> data = new HashMap<>();
-            List xAxis = new ArrayList();
-            for (int i = 0; i < 24; i++) {
-                String h = i + "";
-                if (i < 10) {
-                    h = "0" + i;
-                }
-                xAxis.add(h + ":00");
-            }
-            data.put("xAxis", xAxis);
+            data.put("xAxis", getXAxis());
             data.put("series", serversDateCount);
             modelMap.put("data", data);
             this.success(modelMap);

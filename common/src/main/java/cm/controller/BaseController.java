@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @修改人：CM
@@ -56,5 +58,22 @@ public class BaseController {
         modelMap.put("msg", errorMsg);
     }
 
+
+    /**
+     * 获取时间轴横坐标
+     *
+     * @return
+     */
+    public List getXAxis() {
+        List<String> xAxis = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            String h = i + "";
+            if (i < 10) {
+                h = "0" + i;
+            }
+            xAxis.add(h + ":00");
+        }
+        return xAxis;
+    }
 
 }

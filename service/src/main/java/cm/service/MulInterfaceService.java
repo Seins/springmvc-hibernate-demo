@@ -56,13 +56,54 @@ public class MulInterfaceService extends BaseService {
     }
 
     /**
-     * 获取某个接口某天的请求日志
+     * 获取某个服务器节点接口响应时间的日志
+     *
+     * @param server
+     * @param logTime
+     * @return
+     */
+    public Map<String, List> findServerResponseLogByDate(ServerInfo server, Timestamp logTime) {
+        List<InterfaceInfo> ins = findInterfaceByServerInfo(server);
+        Map<String, List> inLogs = new LinkedHashMap<>();
+        for (InterfaceInfo in : ins) {
+            inLogs.put(in.getInterfaceName(), findResponseLogByDate(in, logTime));
+        }
+        return inLogs;
+    }
+
+    /**
+     * 获取某个接口某天的请求数量统计日志
      *
      * @param in
      * @param logTime 日志纪录时间,精确到天
      * @return
      */
     private List<InterfaceRequestLog> findInterfaceLogByDate(InterfaceInfo in, Timestamp logTime) {
+        String hql = "select irl.requestAmount from InterfaceRequestLog irl where irl.logTime>? and irl.logTime<? and irl.interfaceInfo=?";
+        return getLogsByHqlAndLogTimeAndInterfaceInfo(in, logTime, hql);
+    }
+
+    /**
+     * 获取某个接口某天的请求响应时间日志
+     *
+     * @param in
+     * @param logTime 日志纪录时间,精确到天
+     * @return
+     */
+    private List<InterfaceRequestLog> findResponseLogByDate(InterfaceInfo in, Timestamp logTime) {
+        String hql = "select irl.averageResponseTime from InterfaceRequestLog irl where irl.logTime>? and irl.logTime<? and irl.interfaceInfo=?";
+        return getLogsByHqlAndLogTimeAndInterfaceInfo(in, logTime, hql);
+    }
+
+    /**
+     * 根据条件获取请求日志 (自定义HQL语句)
+     *
+     * @param in
+     * @param logTime
+     * @param hql
+     * @return
+     */
+    private List getLogsByHqlAndLogTimeAndInterfaceInfo(InterfaceInfo in, Timestamp logTime, String hql) {
         logTime.setHours(0);
         logTime.setMinutes(0);
         logTime.setSeconds(0);
@@ -72,7 +113,7 @@ public class MulInterfaceService extends BaseService {
         logTime.setMinutes(59);
         logTime.setSeconds(59);
         Timestamp endTime = new Timestamp(logTime.getTime());
-        String hql = "select irl.requestAmount from InterfaceRequestLog irl where irl.logTime>? and irl.logTime<? and irl.interfaceInfo=?";
         return (List<InterfaceRequestLog>) baseDao.queryForList(hql, startTime, endTime, in);
+
     }
 }

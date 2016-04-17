@@ -13,11 +13,13 @@
             src="${pageContext.request.contextPath}/js/jtsage-datebox-4.0.0.bootstrap.min.js"></script>
     <script>
         function loading() {
+            $("#queryBtn").attr("disabled", true);
             $(".loading-cover").show();
             $(".loading").show();
         }
 
         function hideLoading() {
+            $("#queryBtn").attr("disabled", false);
             $(".loading-cover").hide();
             $(".loading").hide();
         }
@@ -146,7 +148,7 @@
         }
 
         .main-right {
-            width: 1120px;
+            min-width: 1120px;
             height: 480px;
             display: block;
             margin: 0 auto 0 220px;
@@ -170,22 +172,37 @@
             top: 50%;
             left: 50%;
             width: 398px;
-            height: 450px;
+            height: 398px;
             border-radius: 50%;
-            overflow: hidden;
             z-index: 4;
-            margin: -225px -199px;
+            margin: -199px -199px;
             text-align: center;
             color: #fff;
-            line-height:25px;
+            line-height: 25px;
         }
-        .loading img{
-            height:398px;
+
+        .loading img {
+            height: 398px;
             display: block;
+        }
+
+        .loading p {
+            position: absolute;
+            bottom: 2.8rem;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 6;
         }
     </style>
 </head>
 <body>
+<div class="loading-cover"></div>
+<div class="loading">
+    <img src="${pageContext.request.contextPath}/images/loading.gif" class="loading">
+
+    <p>玩命载入数据中...</p>
+</div>
 <div class="nav-top">
     <h3 class="page-title">大型WEB服务器日志分析系统</h3>
 
@@ -194,6 +211,9 @@
             <input type="text" id="date" name="date" class="form-control" data-role="datebox"
                    data-options='{"mode":"datebox"}'/>
         </div>
+        <c:if test="${not empty si}">
+            <jsp:include page="/WEB-INF/view/server-condition.jsp"/>
+        </c:if>
         <input id="queryBtn" type="button" value="Query" class="btn btn-primary"/>
     </div>
 </div>
@@ -209,10 +229,9 @@
                 业务指标分析
             </li>
             <li>
-                <a href="#">服务器接口请求频率分析</a>
+                <a href="/ALL_INTERFACE_FREQUENCE">接口请求频率分析</a>
             </li>
-            <li><a href="#">服务器某接口请求频率分析</a></li>
-            <li><a href="#">服务器某接口响应时间分析</a></li>
+            <li><a href="/INTERFACE_RESPONSE">接口响应时间分析</a></li>
         </ul>
     </div>
     <c:if test="${empty uri}">
@@ -223,12 +242,7 @@
     </c:if>
 
 </div>
-<div class="loading-cover"></div>
-<div class="loading">
-    <img src="${pageContext.request.contextPath}/images/loading.gif" class="loading">
 
-    <p>玩命载入数据中...</p>
-</div>
 
 </body>
 </html>
