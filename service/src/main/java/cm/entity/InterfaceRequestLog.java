@@ -25,6 +25,7 @@ public class InterfaceRequestLog {
         this.averageResponseTime = averageResponseTime;
     }
 
+    @JoinColumn(name = "interface_id")
     @ManyToOne(targetEntity = InterfaceInfo.class, fetch = FetchType.EAGER)
     public InterfaceInfo getInterfaceInfo() {
         return interfaceInfo;

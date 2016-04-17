@@ -18,9 +18,9 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="interface_id" type="bigint"/>
-            <column name="log_time" type="timestamp"/>
-            <column name="request_amount" type="bigint"/>
+            <column name="interface_id" type="bigint" remarks="所属接口ID"/>
+            <column name="log_time" type="timestamp" remarks="日志记录时间"/>
+            <column name="request_amount" type="bigint" remarks="请求次数统计,为一小时的量,定期从redis中同步所得"/>
         </createTable>
         <addAutoIncrement
                 columnDataType="bigint"
@@ -37,7 +37,7 @@
     </changeSet>
     <changeSet id="add.response_time.column" author="CM">
         <addColumn tableName="${table.name}">
-            <column name="average_response_time" type="bigint"></column>
+            <column name="average_response_time" type="bigint" remarks="平均响应时间,为一小时的平均值,定期从redis中同步所得"></column>
         </addColumn>
     </changeSet>
 

@@ -18,9 +18,9 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="server_id" type="bigint"/>
-            <column name="interface_name" type="varchar(200)"/>
-            <column name="interface_uri" type="varchar(500)"/>
+            <column name="server_id" type="bigint" remarks="所属服务器节点ID"/>
+            <column name="interface_name" type="varchar(200)" remarks="接口名称"/>
+            <column name="interface_uri" type="varchar(500)"  remarks="接口地址"/>
         </createTable>
         <addAutoIncrement
                 columnDataType="bigint"
