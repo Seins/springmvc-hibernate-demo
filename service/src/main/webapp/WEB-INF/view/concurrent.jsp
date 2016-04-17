@@ -14,7 +14,7 @@
     $("#queryBtn").bind("click", function () {
 
         var date = new Date($("#date").val()).getTime();
-        if(isNaN(date)){
+        if (isNaN(date)) {
             alert('请选择要查询的时间');
         }
         changeTable(date);
@@ -36,15 +36,20 @@
             },
             type: 'post',
             dataType: 'json',
-            async: false,
+            async: true,
+            beforeSend: function () {
+                loading();
+            },
             success: function (res) {
+                hideLoading();
                 if (res.result !== "0") {
                     alert(res.msg);
                     return;
                 }
                 console.log("res:%o", res);
-                if(res.data.series.length<=0){
+                if (res.data.series.length <= 0) {
                     alert('没有找到对应的日志数据!');
+                    return;
                 }
                 var myChart = echarts.init(document.getElementById('main'));
 
@@ -82,6 +87,7 @@
 
             },
             error: function (rq, st, msg) {
+                hideLoading();
                 alert("error:" + msg);
             }
         })

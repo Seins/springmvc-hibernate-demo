@@ -37,7 +37,11 @@
             type: 'post',
             dataType: 'json',
             async: true,
+            beforeSend:function(){
+                loading();
+            },
             success: function (res) {
+                hideLoading();
                 if (res.result !== "0") {
                     alert(res.msg);
                     return;
@@ -45,6 +49,7 @@
                 console.log("res:%o", res);
                 if (res.data.series.length <= 0) {
                     alert('没有找到对应的日志数据!');
+                    return;
                 }
                 var myChart = echarts.init(document.getElementById('main'));
                 var series = [];
@@ -96,6 +101,8 @@
                 myChart.setOption(option);
             },
             error: function (rq, st, msg) {
+                hideLoading();
+                console.error("req:%o,st:%o,msg:%o", rq, st, msg);
                 alert("error:" + msg);
             }
         })

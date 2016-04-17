@@ -11,6 +11,17 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
     <script type="text/javascript"
             src="${pageContext.request.contextPath}/js/jtsage-datebox-4.0.0.bootstrap.min.js"></script>
+    <script>
+        function loading() {
+            $(".loading-cover").show();
+            $(".loading").show();
+        }
+
+        function hideLoading() {
+            $(".loading-cover").hide();
+            $(".loading").hide();
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -140,6 +151,38 @@
             display: block;
             margin: 0 auto 0 220px;
         }
+
+        .loading-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            background: #000;
+            opacity: 0.5;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 398px;
+            height: 450px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 4;
+            margin: -225px -199px;
+            text-align: center;
+            color: #fff;
+            line-height:25px;
+        }
+        .loading img{
+            height:398px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -178,6 +221,14 @@
     <c:if test="${not empty uri}">
         <jsp:include page="${uri}"></jsp:include>
     </c:if>
+
 </div>
+<div class="loading-cover"></div>
+<div class="loading">
+    <img src="${pageContext.request.contextPath}/images/loading.gif" class="loading">
+
+    <p>玩命载入数据中...</p>
+</div>
+
 </body>
 </html>
