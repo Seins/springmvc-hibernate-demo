@@ -4,6 +4,8 @@ import cm.dao.HibernateBaseDao;
 import cm.entity.InterfaceInfo;
 import cm.entity.InterfaceRequestLog;
 import cm.entity.ServerInfo;
+import cm.redis.ConfigRedisOperator;
+import cm.redis.RedisKeyCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +21,13 @@ public class BaseService {
     @Autowired
     protected HibernateBaseDao baseDao;
 
+    @Autowired
+    private ConfigRedisOperator redisOperator;
 
     public List<ServerInfo> findAllServer() {
+        redisOperator.hset(RedisKeyCenter.BILL_ORDER_REQUEST, "test_order_id", "{\"transNo\":\"xxxxxxx\",\"productNo\":\"xxxxxx\"}");
+        String result = redisOperator.hget(RedisKeyCenter.BILL_ORDER_REQUEST, "test_order_id");
+        System.out.println("result:" + result);
         return (List<ServerInfo>) baseDao.getAll(ServerInfo.class);
     }
 
