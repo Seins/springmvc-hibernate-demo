@@ -3,6 +3,7 @@ package cm.controller;
 import cm.entity.ServerConcurrentLog;
 import cm.entity.ServerInfo;
 import cm.service.ConcurrentLogService;
+import cm.service.RedisService;
 import cm.service.TimeOutLogService;
 import cm.web.MediaTypes;
 import com.alibaba.fastjson.JSON;
@@ -30,6 +31,8 @@ public class NonBusinessController extends BaseController {
 
     @Autowired
     private TimeOutLogService timeOutLogService;
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 服务器节点并发节点数据
@@ -42,6 +45,7 @@ public class NonBusinessController extends BaseController {
     @RequestMapping(value = "/concurrent/list", method = RequestMethod.POST, produces = MediaTypes.JSON_UTF_8)
     public String concurrentList(ModelMap modelMap, @RequestParam(value = "time") Long time) {
         try {
+            redisService.addTestData();
             List<ServerInfo> servers = concurrentLogService.findAllServer();
             List<String> serverNames = new ArrayList();
             for (ServerInfo info : servers) {
@@ -145,4 +149,6 @@ public class NonBusinessController extends BaseController {
 
         return JSON.toJSONString(modelMap);
     }
+
+
 }

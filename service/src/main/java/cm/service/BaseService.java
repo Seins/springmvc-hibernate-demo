@@ -22,12 +22,10 @@ public class BaseService {
     protected HibernateBaseDao baseDao;
 
     @Autowired
-    private ConfigRedisOperator redisOperator;
+    protected ConfigRedisOperator redisOperator;
 
     public List<ServerInfo> findAllServer() {
-        redisOperator.hset(RedisKeyCenter.BILL_ORDER_REQUEST, "test_order_id", "{\"transNo\":\"xxxxxxx\",\"productNo\":\"xxxxxx\"}");
-        String result = redisOperator.hget(RedisKeyCenter.BILL_ORDER_REQUEST, "test_order_id");
-        System.out.println("result:" + result);
+
         return (List<ServerInfo>) baseDao.getAll(ServerInfo.class);
     }
 
