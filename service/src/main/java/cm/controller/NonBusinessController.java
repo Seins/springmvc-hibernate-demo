@@ -45,7 +45,7 @@ public class NonBusinessController extends BaseController {
     @RequestMapping(value = "/concurrent/list", method = RequestMethod.POST, produces = MediaTypes.JSON_UTF_8)
     public String concurrentList(ModelMap modelMap, @RequestParam(value = "time") Long time) {
         try {
-            redisService.addTestData();
+//            redisService.addTestData();
             List<ServerInfo> servers = concurrentLogService.findAllServer();
             List<String> serverNames = new ArrayList();
             for (ServerInfo info : servers) {

@@ -1,13 +1,21 @@
 package cm.service;
 
+import cm.dao.HibernateBaseDao;
+import cm.entity.CacheDataChangeLog;
 import cm.model.DataChangeLogModel;
 import cm.redis.RedisKeyCenter;
 import cm.util.DateUtil;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * class name： cm.service.RedisService
@@ -16,6 +24,9 @@ import java.sql.Timestamp;
  */
 @Service
 public class RedisService extends BaseService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedisService.class);
+    @Autowired
+    private HibernateBaseDao baseDao;
 
     /**
      * 添加测试数据，原则上每天分24个小时记录，第二天会持久化到数据库中，
@@ -55,5 +66,17 @@ public class RedisService extends BaseService {
             }
         }
         System.out.println("end:" + System.currentTimeMillis());
+    }
+
+    /**
+     * 同步一天的数据到数据库
+     *
+     * @param logs
+     */
+    public void addLog(List<String> logs) {
+        for (String str : logs) {
+            CacheDataChangeLog log = JSON.parseObject(str, CacheDataChangeLog.class);
+            baseDao.add(log);
+        }
     }
 }

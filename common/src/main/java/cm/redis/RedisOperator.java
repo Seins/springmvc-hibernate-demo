@@ -545,6 +545,18 @@ public class RedisOperator {
         Long result;
         try {
             result = jedis.llen(key);
+
+        } finally {
+            closeJedis(jedis);
+        }
+        return result;
+    }
+
+    public Long hlen(String key) {
+        Jedis jedis = getJedis();
+        Long result;
+        try {
+            result = jedis.hlen(key);
         } finally {
             closeJedis(jedis);
         }
