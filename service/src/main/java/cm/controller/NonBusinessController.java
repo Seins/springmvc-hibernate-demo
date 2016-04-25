@@ -1,12 +1,15 @@
 package cm.controller;
 
+import cm.entity.CacheDataChangeLog;
 import cm.entity.ServerConcurrentLog;
 import cm.entity.ServerInfo;
+import cm.service.CacheLogService;
 import cm.service.ConcurrentLogService;
 import cm.service.RedisService;
 import cm.service.TimeOutLogService;
 import cm.web.MediaTypes;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class NonBusinessController extends BaseController {
 
     @Autowired
     private TimeOutLogService timeOutLogService;
+
+    @Autowired
+    private CacheLogService cacheLogService;
     @Autowired
     private RedisService redisService;
 
@@ -150,5 +156,35 @@ public class NonBusinessController extends BaseController {
         return JSON.toJSONString(modelMap);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/cache/list")
+    public String cacheList(ModelMap modelMap, @RequestParam(value = "logTime") Long logTime) {
+        try {
+            List<CacheDataChangeLog> logs = cacheLogService.findByLogTime(new Timestamp(logTime));
+            if (CollectionUtils.isEmpty(logs)) {
+                throw new RuntimeException("未找到对应的日志数据，服务器可能处于维护状态!");
+            }
+            Map data = new HashMap();
+            Map series = new HashMap();
+            List<Long> sData = new ArrayList<>();
+            for (CacheDataChangeLog log : logs) {
+                sData.add(log.getDataAmount());
+            }
+            series.put("data", sData);
+            series.put("name", "redis缓存数据变化统计");
+            series.put("type", "line");
+            data.put("series", series);
+            data.put("xAxis", getXAxis());
+            modelMap.put("data", data);
+            this.success(modelMap);
+        } catch (RuntimeException ex) {
+            this.failed(modelMap, ex.getMessage());
+            LOGGER.error("get cache data amount log list occur error:", ex);
+        } catch (Exception ex) {
+            this.failed(modelMap);
+            LOGGER.error("get cache data amount log list occur error:", ex);
+        }
+        return JSON.toJSONString(modelMap);
+    }
 
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd"
+        >
+
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+    <property name="table.name" value="analysis_note"/>
+    <property name="schema" value="log_db"/>
+    <changeSet id="create.table" author="CM">
+        <sql>
+            use ${schema};
+        </sql>
+        <createTable tableName="${table.name}" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="log_time" type="timestamp" remarks="当前日志数据表的日志记录时间"/>
+            <column name="note_time" type="timestamp" remarks="笔记创建时间"/>
+            <column name="module" type="varchar(50)" remarks="所属模块（日志系统的模块）"/>
+        </createTable>
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                schemaName="${schema}"
+                tableName="${table.name}"/>
+    </changeSet>
+    <changeSet id="add.column.note_content" author="CM">
+        <addColumn tableName="${table.name}">
+            <column name="note_content" type="varchar(500)" remarks="笔记内容"></column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
